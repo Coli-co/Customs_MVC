@@ -1,4 +1,4 @@
-const customer = [
+const customers = [
   {
     customer_id: 1,
     first_name: 'Babara',
@@ -57,4 +57,4 @@ const customer = [
 ]
 
 
-module.exports = {customer}
+module.exports = {customers}
