@@ -1,20 +1,28 @@
 const express = require('express')
 const app = express()
 const {customers} = require('./data')
+const logger = require('./logger')
+const authorize = require('./authorize')
+// req => middleware => res
+app.use([logger, authorize])
+
+
 
 app.get('/', (req, res) => {
+  
   console.log("user hit the server")
-  // res.status(200).send('Home Page')
   res.send('<h1>Home Page</h1><a href = "/customers">Customers Data</a>')
 })
 
 
 app.get('/customers', (req, res) => {
+  console.log(req.user)
+  console.log('Logger is authorized !')
   const newCustomer = customers.map((data) => {
     const {customer_id, first_name, last_name, birth_date, address, city, state} = data;
     return {customer_id, first_name, last_name, birth_date, address, city, state}
   })
-  res.json(newCustomer)
+  return res.json(newCustomer)
 })
 
 
