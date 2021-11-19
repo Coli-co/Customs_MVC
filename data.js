@@ -48,7 +48,7 @@ const customers = [
     first_name: 'Clemmie',
     last_name: 'Betchley',
     birth_date: '1973/11/7',
-    phone: NaN,
+    phone: 'NaN',
     address: '5 Spohn Circle',
     city: 'Arlington',
     state: 'TX',

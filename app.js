@@ -20,12 +20,12 @@ app.get('/customers', (req, res) => {
 
 app.get('/customers/:customerID', (req, res) => {
   console.log(req.params)
-  const {customerID} =req.params
+  const {customerID} = req.params
   const singleCustomers = customers.find(
     (customer) => customer.customer_id === Number(customerID)
   )
-if(!singleCustomers) {
-  res.status(404).send('Customer Data Doesn\'t Exist')
+  if(!singleCustomers) {
+    res.status(404).send('Customer ID doesn\'t exist')
 }
 
   res.json(singleCustomers)
@@ -33,11 +33,44 @@ if(!singleCustomers) {
 })
 
 
+app.get('/customers/data/query', (req, res) => {
+  const { search, limit, field } = req.query
+  console.log(req.query)
+
+  let searchCustomers = [...customers]
+  
+  if(search) {
+      searchCustomers = searchCustomers.filter((data) => { 
+        const value = data[field]
+        if (typeof value == "number") { 
+          // const int_data = keyWord.toString() 
+          return value == Number(search)
+        }    
+      return value.startsWith(search)
+      })
+  } 
+ 
+
+  if (searchCustomers.length < 1) {
+    // return res.status(200).send('No customer data match your result.')
+    return res.status(200).json({ success: true, data: []})
+  }
 
 
-app.all('*', (req, res) => {
-  res.status(404).send('<h1>Page not found</h1>')
+  if (limit) {
+    searchCustomers = searchCustomers.slice(0, Number(limit))
+  }
+  return res.json(searchCustomers)
+
 })
+
+
+
+
+
+// app.all('*', (req, res) => {
+//   res.status(404).send('<h1>Page not found</h1>')
+// })
 
 
 app.listen(5000, () => {
