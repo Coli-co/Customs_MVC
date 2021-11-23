@@ -77,6 +77,26 @@ app.get('/customers/:customerID', (req, res) => {
 
 })
 
+app.put('/customers/:customerID', (req, res) => {
+  const { customerID } = req.params
+  const { name } = req.body
+  const person = customers.find((customer) => customer.customer_id == Number(customerID))
+
+  if(!person){
+    return res.status(400).json({success:false, msg: `no person with id ${customerID}`})
+    }
+
+  const newPeople = customers.map((customer) => {
+    if (customer.customer_id === Number(customerID)) {
+      customer.first_name = name
+    }
+    return customer
+  })
+
+  return res.status(200).json({ success:true, data: newPeople})
+  
+})
+
 
 app.get('/customers/data/query', (req, res) => {
   const { search, limit, field } = req.query
