@@ -98,6 +98,23 @@ app.put('/customers/:customerID', (req, res) => {
 })
 
 
+app.delete('/customers/:customerID', (req, res) => {
+  const person = customers.find((customer) => customer.customer_id === Number(req.params.customerID))
+
+  if (!person) {
+    return res.status(400).json({ success:false, msg:`no person with id ${req.params.customerID}`})
+  }
+
+  const newPeople = customers.filter(
+    (customer) => customer.customer_id != Number(req.params.customerID)
+  )
+  return res.status(200).json({success: true, data: newPeople})
+
+})
+
+
+
+
 app.get('/customers/data/query', (req, res) => {
   const { search, limit, field } = req.query
   console.log(req.query)
@@ -128,6 +145,7 @@ app.get('/customers/data/query', (req, res) => {
   return res.json(searchCustomers)
 
 })
+
 
 
 
