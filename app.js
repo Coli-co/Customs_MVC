@@ -1,28 +1,52 @@
 const express = require('express')
 const app = express()
+const morgan = require('morgan')
 const {customers} = require('./data')
 const logger = require('./logger')
 const authorize = require('./authorize')
 // req => middleware => res
-app.use([logger, authorize])
+// app.use(logger)
+// app.use('/customers', authorize)
+app.use(morgan('tiny'))
 
+//static assets
+app.use(express.static('./methods-public'))
+//parse from data
+app.use(express.urlencoded({extended: false}))
+//parse json
+app.use(express.json())
 
 
 app.get('/', (req, res) => {
-  
+  console.log(req.user)
+  console.log('Logger is authorized !')
   console.log("user hit the server")
   res.send('<h1>Home Page</h1><a href = "/customers">Customers Data</a>')
 })
 
 
 app.get('/customers', (req, res) => {
-  console.log(req.user)
-  console.log('Logger is authorized !')
   const newCustomer = customers.map((data) => {
     const {customer_id, first_name, last_name, birth_date, address, city, state} = data;
     return {customer_id, first_name, last_name, birth_date, address, city, state}
   })
-  return res.json(newCustomer)
+  return res.status(200).json({ success: true, data: newCustomer})
+})
+
+app.post('/customers', (req, res) => {
+  const {name} = req.body
+  if(!name) {  
+    return res.status(400).json({ success: false, msg: 'please provide name value'})
+  }
+  return res.status(201).send({success:true, person:name})
+})
+
+app.post('/login', (req, res) => {
+  const {name} = req.body;
+  if(name){
+    return res.status(200).send(`Welcome ${name}`)
+  }
+  return res.status(401).send('Please Provide Name Value')
 })
 
 
