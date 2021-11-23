@@ -33,6 +33,7 @@ app.get('/customers', (req, res) => {
   return res.status(200).json({ success: true, data: newCustomer})
 })
 
+
 app.post('/customers', (req, res) => {
   const {name} = req.body
   if(!name) {  
@@ -40,6 +41,18 @@ app.post('/customers', (req, res) => {
   }
   return res.status(201).send({success:true, person:name})
 })
+
+
+
+app.post('/customers/postman', (req, res) => {
+  const {name} = req.body
+  if(!name) {
+    return res.status(400).json({ success:false, msg:'please provide name value'})
+  }
+  return res.status(201).send({success:true, data:[...customers, name]})
+})
+
+
 
 app.post('/login', (req, res) => {
   const {name} = req.body;
