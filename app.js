@@ -6,7 +6,6 @@ const homepage = require('./routes/homepage')
 const customer = require('./routes/customer')
 const auth = require('./routes/auth')
 
-
 app.use(morgan('tiny'))
 
 //static assets

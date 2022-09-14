@@ -15,7 +15,6 @@ const {
 
 router.get('/', getCustomer)
 router.post('/', createCustomer)
-router.post('/postman', createCustomerPostman)
 router.get('/:customerID', getCustomerID)
 router.put('/:customerID', updateCustomer)
 router.delete('/:customerID', deleteCustomer)

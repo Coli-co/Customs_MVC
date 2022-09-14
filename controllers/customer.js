@@ -4,29 +4,26 @@ let {customers} = require('../data')
 
 const getCustomer = (req, res) => {
   const newCustomer = customers.map((data) => {
-    const {customer_id, first_name, last_name, birth_date, address, city, state} = data;
-    return {customer_id, first_name, last_name, birth_date, address, city, state}
+    const {customer_id, first_name, last_name, birth_date, address, city, state, points} = data;
+    return {customer_id, first_name, last_name, birth_date, address, city, state, points}
   })
   return res.status(200).json({ success: true, data: newCustomer})
 }
 
 
 const createCustomer = (req, res) => {
-  const {name} = req.body
-  if(!name) {  
-    return res.status(400).json({ success: false, msg: 'please provide name value'})
+
+  if(!req.body || {}) {  
+    return res.status(400).json({ success: false, msg: 'please provide object value'})
   }
-  return res.status(201).send({success:true, person:name})
-}
 
 
+  const newData = customers.push(req.body)
+  console.log(newData)
+  console.log("customers is:")
+  console.log(customers)
 
-const createCustomerPostman = (req, res) => {
-  const {name} = req.body
-  if(!name) {
-    return res.status(400).json({ success:false, msg:'please provide name value'})
-  }
-  return res.status(201).send({success:true, data:[...customers, name]})
+  return res.status(201).send({success:true, data:customers})
 }
 
 
@@ -50,6 +47,7 @@ const  getCustomerID = (req, res) => {
 const updateCustomer = (req, res) => {
   const { customerID } = req.params
   const { name } = req.body
+ 
   const person = customers.find((customer) => customer.customer_id == Number(customerID))
 
   if(!person){
@@ -58,7 +56,11 @@ const updateCustomer = (req, res) => {
 
   const newPeople = customers.map((customer) => {
     if (customer.customer_id === Number(customerID)) {
-      customer.first_name = name
+      const queryKey = Object.keys(req.body)
+      const queryValue = Object.values(req.body)
+      queryKey.forEach((item, index) => {
+        customer[item] = queryValue[index]
+      })
     }
     return customer
   })
@@ -119,7 +121,6 @@ const queryCustomer = (req, res) => {
 module.exports = {
   getCustomer,
   createCustomer,
-  createCustomerPostman,
   getCustomerID,
   updateCustomer,
   deleteCustomer,
